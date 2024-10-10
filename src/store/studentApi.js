@@ -9,7 +9,7 @@ const studentApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:1337/api/',
     }), 
-    //  指定 API 标签类型
+    //  指定 API 标签类型, 用于清除缓存
     tagTypes: ['student'],
     endpoints: (build) => ({
         getStudents: build.query({
@@ -18,7 +18,7 @@ const studentApi = createApi({
                 console.log(baseQueryReturnValue);
                 return baseQueryReturnValue.data;
             },
-            providesTags: ['student'],
+            providesTags: [{type: 'student', id: 'LIST'}],
         }),
         // 通过ID 查询
         getStudentById: build.query({
@@ -28,6 +28,7 @@ const studentApi = createApi({
             },
             // 缓存时间
             keepUnusedDataFor: 0,
+            providesTags: (result, error, id) => [{type: 'student', id}],   // 置顶 id 的对象清除缓存
         }),
         deleteStudent: build.mutation({
             query: (id) => ({
@@ -43,7 +44,7 @@ const studentApi = createApi({
                     data: stu,
                 }
             }),
-            invalidatesTags: ['student'],   // 使标签失效
+            invalidatesTags: [{type: 'student', id: 'LIST'}],   // 使标签失效
         }),
         updateStudent: build.mutation({
             query: (stu) => ({
@@ -53,7 +54,7 @@ const studentApi = createApi({
                     data: stu,
                 }
             }),
-            invalidatesTags: ['student'],   // 使标签失效
+            invalidatesTags: (result, error, id) => [{type: 'student', id}, {type: 'student', id: 'LIST'}],   // 使标签失效
         })
     }),
 });
