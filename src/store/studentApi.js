@@ -9,20 +9,16 @@ const studentApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:1337/api/',
     }), // 
-    endpoints(build) {
-        return {
-            getStudents: build.query({
-                query() {
-                    return 'students';
-                }
-            }),
-            transformResponce(baseQueryReturnValue) {
+    endpoints: (build) => ({
+        getStudents: build.query({
+            query: () => 'students',
+            transformResponse: (baseQueryReturnValue) => {
+                console.log(baseQueryReturnValue);
                 return baseQueryReturnValue.data;
             }
-        };
-    },
+        }),
+    }),
 });
-
 
 export const { useGetStudentsQuery } = studentApi;
 

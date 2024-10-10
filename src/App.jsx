@@ -27,7 +27,7 @@ function App() {
 
       { isLoading && <p>数据加载中...</p>}
       { isSuccess && 
-        <StudentList stus={data.data}/>
+        <StudentList stus={data}/>
       }
 
     </>
