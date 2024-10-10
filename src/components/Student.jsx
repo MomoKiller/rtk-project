@@ -1,6 +1,7 @@
 import React from 'react'
 import StudentForm from './StudentForm';
 import { useState } from 'react';
+import { useDeleteStudentMutation } from '../store/studentApi';
 
 export default function Student(props) {
 
@@ -8,8 +9,11 @@ export default function Student(props) {
 
   const [isEdit, setIsEidt] = useState(false);
 
+  // Mutation 返回元组
+  const [delStudent, {isSuccess}] = useDeleteStudentMutation();
+
   const deleteHandler = () => {
-    // deleteStu();
+    delStudent(id);
   };
 
   const cancelHandler = () => {
@@ -18,7 +22,7 @@ export default function Student(props) {
 
   return (
     <>
-      {!isEdit && 
+      {(!isEdit && !isSuccess) &&
         <tr>
           <td>{name}</td>
           <td>{gender}</td>

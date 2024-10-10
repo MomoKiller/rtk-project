@@ -1,16 +1,31 @@
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import './StudentForm.css';
 import { useState } from 'react';
+import { useAddStudentMutation, useGetStudentByIdQuery, useUpdateStudentMutation } from '../store/studentApi';
 
 export default function StudentForm(props) {
 
   const [inputData, setInputData] = useState({
-    name: props.stu ? props.stu.name : '',
-    gender: props.stu ? props.stu.gender : '男',
-    age: props.stu ? props.stu.age : '',
-    address: props.stu ? props.stu.address : ''
+    name: '',
+    gender: '男',
+    age: '',
+    address: ''
   });
+
+  const { data: stuData, isSucess } = useGetStudentByIdQuery(props?.stu?.id, {
+    skip: !props?.stu?.id,  // 跳过请求
+  });
+
+  const [addStudent, { isSucess: isAddSuccess }] = useAddStudentMutation();
+  const [updateStudent, {isSucess: isUpdateSuccess}] = useUpdateStudentMutation();
+
+  useEffect(() => {
+    if(isSucess) {
+      setInputData(stuData);
+    }
+  }, [isSucess]);
+
 
   const nameChangeHandler = (e) => {
     setInputData(preState => ({...preState, name: e.target.value}));
@@ -26,9 +41,22 @@ export default function StudentForm(props) {
   };
 
   const submitHandler = () => {
+    addStudent(inputData);
+    // 重置
+    setInputData({
+      name: '',
+      gender: '男',
+      age: '',
+      address: ''
+    })
   };
 
   const updateHandler = () => {
+    updateStudent({
+      id: props.stu.id,
+      // attribute: inputData,
+      ...inputData,
+    });
   }
 
   return (

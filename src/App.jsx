@@ -13,7 +13,7 @@ function App() {
   const dispatch = useDispatch();
 
   // 调用 API 查询数据
-  const { data, isSuccess, isLoading } = useGetStudentsQuery();
+  const { data, isSuccess, isLoading, refetch } = useGetStudentsQuery();
 
 
   const setNaneHandler = () => {
@@ -25,6 +25,7 @@ function App() {
       {/* <p>{ JSON.stringify(student)}</p>
       <button onClick={setNaneHandler}>修改名称</button> */}
 
+      <button onClick={refetch}>加载数据</button>
       { isLoading && <p>数据加载中...</p>}
       { isSuccess && 
         <StudentList stus={data}/>
